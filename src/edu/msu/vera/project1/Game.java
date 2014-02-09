@@ -12,34 +12,10 @@ import android.view.View;
 
 public class Game {
 	
-
-	
-	/**
-	 * Percentage of the display width or height that 
-	 * is occupied by the game.
-	 */
-	final static float SCALE_IN_VIEW = 1.0f;
-
-    /**
-     * The size of the game area in pixels
-     */
-    private int gameArea;
+    private float cHeight;
+    private float cWidth;
+    private float brickBase;
     
-    /**
-     * How much we scale the bricks
-     */
-    private float scaleFactor;
-    
-    /**
-     * Left margin in pixels
-     */
-    private int marginX;
-     
-    /**
-     * Top margin in pixels
-     */
-    private int marginY;
-	
     /**
      * This variable is set to a brick we are dragging. If
      * we are not dragging, the variable is null.
@@ -61,6 +37,11 @@ public class Game {
     private float lastRelY;
 
     /**
+     * How far the bricks are scrolled up
+     */
+    private float scrollDistance = 0;
+    
+    /**
      * The height of the stack
      */
     private float stackHeight = 0;
@@ -74,7 +55,7 @@ public class Game {
 	 * Paint for filling the area the stack is in
 	 */
 	private Paint fillPaint;
-	
+		
 	/**
 	 * Collection of bricks
 	 */
@@ -84,29 +65,21 @@ public class Game {
 		fillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		fillPaint.setColor(Color.rgb(112, 112, 112));
 
-		
+
 	}
 	
 	public void draw(Canvas canvas) {
 		int wid = canvas.getWidth();
 		int hit = canvas.getHeight();
 		
-		// Determine the minimum of the two dimensions
-		int minDim = wid < hit ? wid : hit;
-		
-		gameArea = (int)(minDim * SCALE_IN_VIEW);
-		
-		// Compute the margins so we center the puzzle
-		marginX = (wid - gameArea) / 2;
-		marginY = (hit - gameArea) / 2;
+		cHeight = canvas.getHeight();
+		cWidth = canvas.getWidth();
 		
 		//game area is entire canvas 
 		canvas.drawRect(0, 0, wid, hit, fillPaint);
-		
-		scaleFactor = (float)gameArea / (float)canvas.getWidth();
-		
+				
 		for(Brick brick : bricks) {
-			brick.draw(canvas, marginX, marginY, gameArea, scaleFactor);
+			brick.draw(canvas);
 		}
 
 	}
@@ -124,8 +97,8 @@ public class Game {
         // puzzle.
         //
         
-        float relX = (event.getX() - marginX) / gameArea;
-        float relY = (event.getY() - marginY) / gameArea;
+        float relX = event.getX();
+        float relY = event.getY();
     	
         switch (event.getActionMasked()) {
 
@@ -139,18 +112,30 @@ public class Game {
                 dragging = null;
                 return true;
             }
+            else if ( scrollDistance > 0){
+            	scrollDistance = 0;
+            }
             break;
 
         case MotionEvent.ACTION_MOVE:
             // If we are dragging, move the brick and force a redraw
             if(dragging != null) {
-                dragging.move(relX - lastRelX, relY - lastRelY);
+                dragging.move(relX - lastRelX, 0);
                 lastRelX = relX;
                 lastRelY = relY;
                 view.invalidate();
                 return true;
             }
-            break;
+            else if (scrollDistance <= 0){
+            
+        		for(Brick brick : bricks) {
+                    brick.move(0, relY - lastRelY);              
+        		}
+                scrollDistance += (lastRelY -relY);
+                lastRelY = relY;
+                view.invalidate();
+        		return true;
+            }
         }
 
         
@@ -168,7 +153,7 @@ public class Game {
         // Check each brick to see if it has been hit
     	if ( bricks.size() > 0){
             int b=bricks.size()-1;
-            if(bricks.get(b).hit(x, y, gameArea, scaleFactor)) {
+            if(bricks.get(b).hit(x, y)) {
                 // We hit a brick!
                 dragging = bricks.get(b);
                 lastRelX = x;
@@ -176,6 +161,12 @@ public class Game {
                 
                 return true;
             }
+            else{                
+            	lastRelX = x;
+            	lastRelY = y;
+            	return true;
+            }
+
     	}
 
         
@@ -184,18 +175,26 @@ public class Game {
     }
     
     public void newTurn(Context context, float weight){
+    	
+    	if (bricks.size() > 0){
+    		brickBase = bricks.get(0).getY();
+    	}
+    	else {
+    		brickBase = cHeight-50;
+    	}
+
     	if (turn == 0){
-    		bricks.add(new Brick(context, R.drawable.brick_barney, 0.5f, .9f-stackHeight, weight));
+    		bricks.add(new Brick(context, R.drawable.brick_barney, cWidth/2, brickBase-stackHeight , weight));
     		turn = 1;
     	}
     	else {
-    		bricks.add(new Brick(context, R.drawable.brick_blue, .5f, .9f-stackHeight, weight));
+    		bricks.add(new Brick(context, R.drawable.brick_blue, cWidth/2, brickBase-stackHeight, weight));
     		turn = 0;
     	}
-    	stackHeight += .075f;
+    	stackHeight += bricks.get(0).getHeight();
 
     }
     
 
-
+    	
 }

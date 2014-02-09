@@ -28,6 +28,11 @@ public class Brick {
 	 * weight of brick
 	 */
 	private float weight = 0;
+	
+	/**
+	 * height of brick
+	 */
+	private float brickHeight = 0;
 
 	public Brick(Context context, int id, float x, float y, float weight) {
 		this.x = x;
@@ -35,6 +40,8 @@ public class Brick {
 		this.weight = weight;
 		
 		brick = BitmapFactory.decodeResource(context.getResources(), id);
+		
+		brickHeight = brick.getHeight();
 	}
 	
 	/**
@@ -45,16 +52,14 @@ public class Brick {
 	 * @param game area Size we draw the game area in pixels
 	 * @param game area Amount we scale the bricks when we draw them
 	 */
-	public void draw(Canvas canvas, int marginX, int marginY, int gamearea, float scaleFactor) {
+	public void draw(Canvas canvas) {
 		canvas.save();
 		
 		// Convert x,y to pixels and add the margin, then draw
-		canvas.translate(marginX + x * gamearea, marginY + y * gamearea);
 		
-		// Scale it to the right size
-		canvas.scale(scaleFactor, scaleFactor);
+		canvas.translate(x, y);
 		
-		// This magic code makes the center of the piece at 0, 0
+		// This magic code makes the center of the brick at 0, 0
 		canvas.translate(-brick.getWidth() / 2, -brick.getHeight() / 2);
 		
 		// Draw the bitmap
@@ -70,10 +75,10 @@ public class Brick {
      * @param scaleFactor the amount to scale a brick by
      * @return true if we hit the brick
      */
-    public boolean hit(float testX, float testY, int gameArea, float scaleFactor) {
+    public boolean hit(float testX, float testY) {
         // Make relative to the location and size to the brick size
-        int pX = (int)((testX - x) * gameArea / scaleFactor) + brick.getWidth() / 2;
-        int pY = (int)((testY - y) * gameArea / scaleFactor) + brick.getHeight() / 2;
+        int pX = (int)((testX - x) ) + brick.getWidth() / 2;
+        int pY = (int)((testY - y) ) + brick.getHeight() / 2;
         
         if(pX < 0 || pX >= brick.getWidth() ||
            pY < 0 || pY >= brick.getHeight()) {
@@ -92,16 +97,22 @@ public class Brick {
      */
     public void move(float dx, float dy) {
         x += dx;
-        //y += dy;
+        y += dy;
     }
     
-    public float stackHeight ( float h){
-    	return h += brick.getHeight();
+    public float getHeight (){
+    	return brickHeight;
     }
     
     public float getWeight (){
     	return this.weight;
     }
     
-
+    public float getX (){
+    	return this.x;
+    }
+    
+    public float getY (){
+    	return this.y;
+    }
 }

@@ -8,7 +8,7 @@ import android.graphics.Canvas;
 public class Brick {
 	
 	/**
-	 * THe image for the actual brick.
+	 * The image for the actual brick.
 	 */
 	private Bitmap brick;
 	
@@ -98,6 +98,10 @@ public class Brick {
     public void move(float dx, float dy) {
         x += dx;
         y += dy;
+    }
+    
+    public float getWidth(){
+    	return brick.getWidth();
     }
     
     public float getHeight (){

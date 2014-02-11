@@ -61,6 +61,11 @@ public class Game {
 	 */
 	public ArrayList<Brick> bricks = new ArrayList<Brick>();
 	
+	/*
+	 * Index of the highest brick that is stable
+	 */
+	private int highestStableBrick = 0;
+	
 	public Game(Context context) {
 		fillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		fillPaint.setColor(Color.rgb(112, 112, 112));
@@ -193,6 +198,50 @@ public class Game {
     	}
     	stackHeight += bricks.get(0).getHeight();
 
+    }
+    
+    private boolean isStackStable(){
+    	
+    	Brick brick;
+    	for(int i = 0; i < bricks.size(); i--)
+    	{
+    		float centerOfMass = calculateStackCenterOfMassX(i);
+    		brick = bricks.get(i);
+    		float brickLeftXPos = brick.getX() - brick.getWidth() / 2.0f;
+    		float brickRightXPos = brick.getX() + brick.getWidth() / 2.0f;
+    		if(centerOfMass < brickLeftXPos || centerOfMass > brickRightXPos)
+    		{
+    			return false;
+    		}
+    		else{
+    			highestStableBrick = i;
+    		}
+    	}
+    	
+    	return true;
+    }
+    
+    
+    /*
+     * Gets the center of mass above the specified brick
+     */
+    private float calculateStackCenterOfMassX(int index){
+    	
+    	// Center of mass for bricks above the current brick    	
+    	float xCenterOfMass = 0.0f;
+    	float totalMass = 0.0f;
+    	
+    	for(int j = index; j < bricks.size(); j++)
+		{
+			xCenterOfMass += bricks.get(j).getX() * bricks.get(j).getWeight();
+		}
+    	if(totalMass != 0)
+    	{
+    		xCenterOfMass = (1.0f / totalMass) * xCenterOfMass;
+    		return xCenterOfMass;
+    	}
+    	
+    	return 0.0f;
     }
     
 

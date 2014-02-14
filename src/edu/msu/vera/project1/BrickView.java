@@ -56,6 +56,9 @@ public class BrickView extends View {
         this.invalidate();
     }
 	
+    public void placeBrick(){
+    	game.place();
+    }
 	
 
 }

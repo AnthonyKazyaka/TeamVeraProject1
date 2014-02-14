@@ -4,6 +4,7 @@ package edu.msu.vera.project1;
 import edu.msu.vera.project1.BrickView;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 
@@ -44,6 +45,15 @@ public class GameActivity extends Activity {
 	
 	public void onCreateBrick10(View view){
         brickView.addBrick(10);
+	}
+	
+	public void onGameOver(View view) {
+		Intent intent = new Intent(this, EndGameActivity.class);
+		startActivity(intent);
+	}
+	
+	public void onPlaceBrick(View view){
+        brickView.placeBrick();
 	}
 
 }

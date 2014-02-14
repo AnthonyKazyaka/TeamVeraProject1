@@ -7,15 +7,22 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class Game {
 	
+	// canvas height
     private float cHeight;
+    // canvas width
     private float cWidth;
+    // y value of the base of the stack of bricks
     private float brickBase;
+    
+    /**
+     * Boolean if the top brick is placed or not
+     */
+    private boolean isPlaced;
     
     /**
      * This variable is set to a brick we are dragging. If
@@ -58,14 +65,14 @@ public class Game {
 	private Paint fillPaint;
 		
 	/**
-	 * Collection of bricks
+	 * Collection of bricks used the store the stack
 	 */
 	public ArrayList<Brick> bricks = new ArrayList<Brick>();
 	
 	/*
 	 * Index of the highest brick that is stable
 	 */
-	//private int highestStableBrick = 0;
+	private int highestStableBrick = 0;
 	
 	public Game(Context context) {
 		fillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -156,11 +163,11 @@ public class Game {
      */
     private boolean onTouched(float x, float y) {
         
-        // Check each brick to see if it has been hit
+        // Check top brick to see if it has been hit
     	if ( bricks.size() > 0){
             int b=bricks.size()-1;
-            if(bricks.get(b).hit(x, y)) {
-                // We hit a brick!
+            if(bricks.get(b).hit(x, y) && isPlaced) {
+                // We hit a brick that has not been placed
                 dragging = bricks.get(b);
                 lastRelX = x;
                 lastRelY = y;
@@ -174,15 +181,18 @@ public class Game {
             }
 
     	}
+
+        
         
         return false;
     }
     
     public void newTurn(Context context, float weight){
-    	/*
-    	int brickOffsetCounter = bricks.size() - 1;
-    	float brickOffsetDistance = 130.0f;
-    	*/
+    	
+    	// when new turn is called is confirms where the base of bricks is located and adds the brick
+    	// depending on the turn with the arguments of context, brick_color, x, y, and weight
+    	// Also reset isPlaced to true so the brick can be dragged and placed. 
+    	
     	if (bricks.size() > 0){
     		brickBase = bricks.get(0).getY();
     	}
@@ -191,40 +201,38 @@ public class Game {
     	}
 
     	if (turn == 0){
-    		bricks.add(new Brick(context, R.drawable.brick_barney, cWidth/2 /* + brickOffsetCounter * brickOffsetDistance */, brickBase-stackHeight , weight));
+    		bricks.add(new Brick(context, R.drawable.brick_barney, cWidth/2, brickBase-stackHeight , weight));
     		turn = 1;
+    		isPlaced = true;
     	}
     	else {
-    		bricks.add(new Brick(context, R.drawable.brick_blue, cWidth/2 /* + brickOffsetCounter * brickOffsetDistance */, brickBase-stackHeight, weight));
+    		bricks.add(new Brick(context, R.drawable.brick_blue, cWidth/2, brickBase-stackHeight, weight));
     		turn = 0;
+    		isPlaced = true;
     	}
     	stackHeight += bricks.get(0).getHeight();
 
-    	boolean isStable = isStackStable();
-    	Log.i("Game", "IsStable: " + isStable);  	
+    }
+    
+    public void place(){
+    	isPlaced = false;
     }
     
     private boolean isStackStable(){
     	
-    	// Should always increment to 0 at the very least, since bricks[0] should always be stable at the bottom of the stack.
-    	highestStableBrick = 0;
     	Brick brick;
-    	
-    	for(int i = 0; i < bricks.size(); i++)
+    	for(int i = 0; i < bricks.size(); i--)
     	{
     		float centerOfMass = calculateStackCenterOfMassX(i);
     		brick = bricks.get(i);
     		float brickLeftXPos = brick.getX() - brick.getWidth() / 2.0f;
     		float brickRightXPos = brick.getX() + brick.getWidth() / 2.0f;
-    		
-    		Log.i("Game", "Brick " + i + " CenterOfMass above brick: " + centerOfMass + ", BrickCenter: " + brick.getX() + ", Left: " + brickLeftXPos + ", Right: " + brickRightXPos);
-    		
     		if(centerOfMass < brickLeftXPos || centerOfMass > brickRightXPos)
     		{
     			return false;
     		}
-    		 else{
-    		 	highestStableBrick = i;
+    		else{
+    			highestStableBrick = i;
     		}
     	}
     	
@@ -241,10 +249,9 @@ public class Game {
     	float xCenterOfMass = 0.0f;
     	float totalMass = 0.0f;
     	
-    	for(int j = index + 1; j < bricks.size(); j++)
+    	for(int j = index; j < bricks.size(); j++)
 		{
 			xCenterOfMass += bricks.get(j).getX() * bricks.get(j).getWeight();
-			totalMass += bricks.get(j).getWeight();
 		}
     	if(totalMass != 0)
     	{
@@ -252,7 +259,9 @@ public class Game {
     		return xCenterOfMass;
     	}
     	
-    	return bricks.get(index).getX();
+    	return 0.0f;
     }
+    
+
     	
 }

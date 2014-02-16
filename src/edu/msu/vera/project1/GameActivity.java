@@ -5,7 +5,10 @@ import edu.msu.vera.project1.BrickView;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+<<<<<<< HEAD
 import android.graphics.Canvas;
+=======
+>>>>>>> 35221a783a3d2fc3afb194e356ade94e57b2803b
 import android.view.Menu;
 import android.view.View;
 
@@ -61,6 +64,7 @@ public class GameActivity extends Activity {
 	public void onPlaceBrick(View view){
         brickView.placeBrick();
 	}
+<<<<<<< HEAD
 
 	@Override
 	protected void onSaveInstanceState(Bundle bundle) {
@@ -73,5 +77,7 @@ public class GameActivity extends Activity {
 
 	
 	
+=======
+>>>>>>> 35221a783a3d2fc3afb194e356ade94e57b2803b
 
 }

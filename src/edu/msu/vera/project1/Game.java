@@ -26,6 +26,11 @@ public class Game {
     private boolean isPlaced;
     
     /**
+     * Boolean if the top brick is placed or not
+     */
+    private boolean isPlaced;
+    
+    /**
      * This variable is set to a brick we are dragging. If
      * we are not dragging, the variable is null.
      */
@@ -218,7 +223,10 @@ public class Game {
     		bricks.add(new Brick(context, R.drawable.brick_blue, cWidth/2, brickBase-stackHeight, weight));
     		turn = 0;
     		isPlaced = true;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 35221a783a3d2fc3afb194e356ade94e57b2803b
     	}
     	stackHeight += bricks.get(0).getHeight();
 

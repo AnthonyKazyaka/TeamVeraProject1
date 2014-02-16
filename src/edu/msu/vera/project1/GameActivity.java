@@ -5,6 +5,7 @@ import edu.msu.vera.project1.BrickView;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.view.Menu;
 import android.view.View;
 
@@ -14,13 +15,18 @@ public class GameActivity extends Activity {
 	 * The brick view in this activity's view
 	 */
 	private BrickView brickView;
-	
+		
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle bundle) {
+		super.onCreate(bundle);
 		setContentView(R.layout.activity_game);
 		
 		brickView = (BrickView)this.findViewById(R.id.brickView);
+		
+		if(bundle != null) {
+			// We have saved state
+			brickView.loadInstanceState(bundle, this.getBaseContext());
+		}
 
 	}
 
@@ -55,5 +61,17 @@ public class GameActivity extends Activity {
 	public void onPlaceBrick(View view){
         brickView.placeBrick();
 	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle bundle) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(bundle);
+		
+		brickView.saveInstanceState(bundle);
+	}
+
+
+	
+	
 
 }

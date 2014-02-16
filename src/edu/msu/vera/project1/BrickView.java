@@ -3,6 +3,7 @@ package edu.msu.vera.project1;
 import edu.msu.vera.project1.Game;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -59,6 +60,22 @@ public class BrickView extends View {
     public void placeBrick(){
     	game.place();
     }
+    
+	/**
+	 * Save the stack to a bundle
+	 * @param bundle The bundle we save to
+	 */
+	public void saveInstanceState(Bundle bundle) {
+		game.saveInstanceState(bundle);
+	}
+	
+	/**
+	 * Load the stack from a bundle
+	 * @param bundle The bundle we save to
+	 */
+	public void loadInstanceState(Bundle bundle, Context context) {
+		game.loadInstanceState(bundle, context);
+	}
 	
 
 }

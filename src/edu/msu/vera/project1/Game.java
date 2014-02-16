@@ -7,6 +7,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -18,7 +20,6 @@ public class Game {
     private float cWidth;
     // y value of the base of the stack of bricks
     private float brickBase;
-    
     /**
      * Boolean if the top brick is placed or not
      */
@@ -74,6 +75,14 @@ public class Game {
 	 */
 	private int highestStableBrick = 0;
 	
+	/**
+	 * The name of the bundle keys to save the stack
+	 */
+	private final static String LOCATIONS = "Game.locations";
+	private final static String IDS = "Game.ids";
+	private final static String WEIGHTS = "Game.weights";
+
+		
 	public Game(Context context) {
 		fillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		fillPaint.setColor(Color.rgb(112, 112, 112));
@@ -209,6 +218,7 @@ public class Game {
     		bricks.add(new Brick(context, R.drawable.brick_blue, cWidth/2, brickBase-stackHeight, weight));
     		turn = 0;
     		isPlaced = true;
+
     	}
     	stackHeight += bricks.get(0).getHeight();
 
@@ -270,6 +280,66 @@ public class Game {
     	return 0.0f;
     }
     
+	/**
+	 * Save the puzzle to a bundle
+	 * @param bundle The bundle we save to
+	 */
+	public void saveInstanceState(Bundle bundle) {
+		float [] locations = new float[bricks.size() * 2];
+		int [] ids = new int[bricks.size()];
+		float [] weights = new float[bricks.size()];
+		
+		
+		for(int i=0;  i<bricks.size(); i++) {
+			Brick brick = bricks.get(i);
+			locations[i*2] = brick.getX();
+			locations[i*2+1] = brick.getY();
+			ids[i] = brick.getId();
+			weights[i] = brick.getWeight();
+		}
+		
+		bundle.putFloatArray(LOCATIONS, locations);
+		bundle.putIntArray(IDS,  ids);
+		bundle.putFloatArray(WEIGHTS,  weights);
+		bundle.putBoolean("place", isPlaced);
+		bundle.putFloat("base", cWidth);
+
+	}
+	
+	/**
+	 * Read the puzzle from a bundle
+	 * @param bundle The bundle we save to
+	 */
+	public void loadInstanceState(Bundle bundle, Context context) {
+		float [] locations = bundle.getFloatArray(LOCATIONS);
+		int [] ids = bundle.getIntArray(IDS);
+		float [] weights = bundle.getFloatArray(WEIGHTS);
+		isPlaced = bundle.getBoolean("place");
+		
+		brickBase = bundle.getFloat("base");
+		brickBase = brickBase - (brickBase /5);
+		
+		for(int i=0; i<ids.length; i++) {
+
+    		bricks.add(new Brick(context, ids[i], locations[i*2], brickBase - stackHeight, weights[i]));
+        	stackHeight += bricks.get(0).getHeight();
+
+		}
+		
+		if ( bricks.get(bricks.size()-1).getId() == R.drawable.brick_barney){
+			turn = 1;
+		}
+		else {
+			turn = 0;
+		}
+
+	}
+	
+	
+	
+
+	
+	
 
     	
 }

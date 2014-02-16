@@ -220,13 +220,21 @@ public class Game {
     
     private boolean isStackStable(){
     	
-    	Brick brick;
+    	Brick bottomBrick = bricks.get(0);
+    	Brick currentBrick;
+    	
+    	float centerOfMass = 0.0f;
+    	
+    	
+    	
+    	
+    	
     	for(int i = 0; i < bricks.size(); i--)
     	{
     		float centerOfMass = calculateStackCenterOfMassX(i);
-    		brick = bricks.get(i);
-    		float brickLeftXPos = brick.getX() - brick.getWidth() / 2.0f;
-    		float brickRightXPos = brick.getX() + brick.getWidth() / 2.0f;
+    		currentBrick = bricks.get(i);
+    		float brickLeftXPos = currentBrick.getX() - currentBrick.getWidth() / 2.0f;
+    		float brickRightXPos = currentBrick.getX() + currentBrick.getWidth() / 2.0f;
     		if(centerOfMass < brickLeftXPos || centerOfMass > brickRightXPos)
     		{
     			return false;

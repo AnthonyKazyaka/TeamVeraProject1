@@ -6,30 +6,20 @@
     <string name="hello_world">Hello world!</string>
     <string name="next">Start Game</string>
     <string name="title_activity_game">Game</string>
-<<<<<<< HEAD
     <string name="Onekg">Add 1kg</string>
     <string name="Twokg">Add 2kg</string>
     <string name="Fivekg">Add 5kg</string>
     <string name="Tenkg">Add 10kg</string>
-=======
-    <string name="Onekg">1kg</string>
-    <string name="Twokg">2kg</string>
-    <string name="Fivekg">5kg</string>
-    <string name="Tenkg">10kg</string>
->>>>>>> 35221a783a3d2fc3afb194e356ade94e57b2803b
     <string name="title_activity_end_game">EndGameActivity</string>
     <string name="game_over">Game Over</string>
     <string name="new_game">New Game</string>
     <string name="end_game">End Game</string>
     <string name="place">Place Brick</string>
-<<<<<<< HEAD
     <string name="logo">Logo</string>
     <string name="name1">Player 1:</string>
     <string name="name2">Player 2:</string>
     <string name="winner">Congratulations! The winner is</string>
     <string name="player1score">"Player 1 score is: "</string>
     <string name="player2score">Player 2 score is:</string>
-=======
->>>>>>> 35221a783a3d2fc3afb194e356ade94e57b2803b
 
 </resources>

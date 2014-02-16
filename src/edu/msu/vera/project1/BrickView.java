@@ -60,7 +60,6 @@ public class BrickView extends View {
     public void placeBrick(){
     	game.place();
     }
-<<<<<<< HEAD
     
 	/**
 	 * Save the stack to a bundle
@@ -77,8 +76,6 @@ public class BrickView extends View {
 	public void loadInstanceState(Bundle bundle, Context context) {
 		game.loadInstanceState(bundle, context);
 	}
-=======
->>>>>>> 35221a783a3d2fc3afb194e356ade94e57b2803b
 	
 
 }

@@ -26,6 +26,10 @@
             android:name="edu.msu.vera.project1.GameActivity"
             android:label="@string/title_activity_game" >
         </activity>
+        <activity
+            android:name="edu.msu.vera.project1.EndGameActivity"
+            android:label="@string/title_activity_end_game" >
+        </activity>
     </application>
 
 </manifest>

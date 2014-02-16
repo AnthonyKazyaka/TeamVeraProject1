@@ -33,11 +33,17 @@ public class Brick {
 	 * height of brick
 	 */
 	private float brickHeight = 0;
+	
+	/**
+	 * The brick ID
+	 */
+	private int id;
 
 	public Brick(Context context, int id, float x, float y, float weight) {
 		this.x = x;
 		this.y = y;
 		this.weight = weight;
+		this.setId(id);
 		
 		brick = BitmapFactory.decodeResource(context.getResources(), id);
 		
@@ -116,7 +122,23 @@ public class Brick {
     	return this.x;
     }
     
+    public void setX (float x){
+    	this.x = x;
+    }
+    
     public float getY (){
     	return this.y;
     }
+    
+    public void setY (float y){
+    	this.y = y;
+    }
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 }

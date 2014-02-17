@@ -221,35 +221,36 @@ public class Game {
 
     	}
     	stackHeight += bricks.get(0).getHeight();
-    	
-    	boolean isStable = isStackStable();
-    	isStable = isStable;
-    	highestStableBrick = highestStableBrick;
-    	
     }
     
     public void place(){
     	isPlaced = false;
+    	boolean isStable = isStackStable();    	
+    	Log.i("Game", "HighestStableBrick: " + highestStableBrick + "  isStable: " + isStable);
     }
     
     private boolean isStackStable(){
     	
-    	for(int i = 0; i < bricks.size(); i++)
+    	for(int i = bricks.size()-1; i >= 0; i--)
     	{
     		Brick currentBottomBrick = bricks.get(i);
     		
-        	float centerOfMass = currentBottomBrick.getX() * currentBottomBrick.getWeight();
-        	float totalMass = bricks.get(i).getWeight();
+        	float centerOfMass = 0.0f;
+        	float totalMass = 0.0f;
         	
     		for(int j = i + 1; j < bricks.size(); j++)
     		{
-    			Brick currentBrick = bricks.get(i);
+    			Brick currentBrick = bricks.get(j);
     			centerOfMass += currentBrick.getX() * currentBrick.getWeight();
     			totalMass += currentBrick.getWeight();
     		}
     		centerOfMass = (centerOfMass / totalMass);
     		float brickLeftXPos = currentBottomBrick.getX() - currentBottomBrick.getWidth() / 2.0f;
     		float brickRightXPos = currentBottomBrick.getX() + currentBottomBrick.getWidth() / 2.0f;
+    		
+    		//Log.i("Game", "Width: " + currentBottomBrick.getWidth());
+    		Log.i("Game", "Brick: " + i + "  Center of mass: " + centerOfMass + "   Total mass: " + totalMass + "  Left: " + brickLeftXPos + "  Right: " + brickRightXPos);
+    		
     		if(centerOfMass >= brickLeftXPos && centerOfMass <= brickRightXPos)
     		{
     			highestStableBrick = i;
@@ -262,28 +263,6 @@ public class Game {
     	return true;
     }
     
-    
-    /*
-     * Gets the center of mass above the specified brick
-     */
-    private float calculateStackCenterOfMassX(int index){
-    	
-    	// Center of mass for bricks above the current brick    	
-    	float xCenterOfMass = 0.0f;
-    	float totalMass = 0.0f;
-    	
-    	for(int j = index; j < bricks.size(); j++)
-		{
-			xCenterOfMass += bricks.get(j).getX() * bricks.get(j).getWeight();
-		}
-    	if(totalMass != 0)
-    	{
-    		xCenterOfMass = (1.0f / totalMass) * xCenterOfMass;
-    		return xCenterOfMass;
-    	}
-    	
-    	return 0.0f;
-    }
     
 	/**
 	 * Save the puzzle to a bundle
@@ -339,12 +318,5 @@ public class Game {
 		}
 
 	}
-	
-	
-	
-
-	
-	
-
-    	
+	    	
 }

@@ -221,7 +221,11 @@ public class Game {
 
     	}
     	stackHeight += bricks.get(0).getHeight();
-
+    	
+    	boolean isStable = isStackStable();
+    	isStable = isStable;
+    	highestStableBrick = highestStableBrick;
+    	
     }
     
     public void place(){
@@ -230,27 +234,28 @@ public class Game {
     
     private boolean isStackStable(){
     	
-    	Brick bottomBrick = bricks.get(0);
-    	Brick currentBrick;
-    	
-    	float centerOfMass = 0.0f;
-    	
-    	
-    	
-    	
-    	
-    	for(int i = 0; i < bricks.size(); i--)
+    	for(int i = 0; i < bricks.size(); i++)
     	{
-    		float centerOfMass = calculateStackCenterOfMassX(i);
-    		currentBrick = bricks.get(i);
-    		float brickLeftXPos = currentBrick.getX() - currentBrick.getWidth() / 2.0f;
-    		float brickRightXPos = currentBrick.getX() + currentBrick.getWidth() / 2.0f;
-    		if(centerOfMass < brickLeftXPos || centerOfMass > brickRightXPos)
+    		Brick currentBottomBrick = bricks.get(i);
+    		
+        	float centerOfMass = currentBottomBrick.getX() * currentBottomBrick.getWeight();
+        	float totalMass = bricks.get(i).getWeight();
+        	
+    		for(int j = i + 1; j < bricks.size(); j++)
     		{
-    			return false;
+    			Brick currentBrick = bricks.get(i);
+    			centerOfMass += currentBrick.getX() * currentBrick.getWeight();
+    			totalMass += currentBrick.getWeight();
+    		}
+    		centerOfMass = (centerOfMass / totalMass);
+    		float brickLeftXPos = currentBottomBrick.getX() - currentBottomBrick.getWidth() / 2.0f;
+    		float brickRightXPos = currentBottomBrick.getX() + currentBottomBrick.getWidth() / 2.0f;
+    		if(centerOfMass >= brickLeftXPos && centerOfMass <= brickRightXPos)
+    		{
+    			highestStableBrick = i;
     		}
     		else{
-    			highestStableBrick = i;
+    			return false;
     		}
     	}
     	

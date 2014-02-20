@@ -226,25 +226,34 @@ public class Game {
     public void place(){
     	isPlaced = false;
     	boolean isStable = isStackStable();    	
-    	Log.i("Game", "HighestStableBrick: " + highestStableBrick + "  isStable: " + isStable);
+    	Log.i("Game", "IsStackStable: " + isStable);
     }
     
     private boolean isStackStable(){
     	
+    	Brick currentBottomBrick;
+    	Brick currentBrick;
+    	
     	for(int i = bricks.size()-1; i >= 0; i--)
     	{
-    		Brick currentBottomBrick = bricks.get(i);
+    		currentBottomBrick = bricks.get(i);
     		
         	float centerOfMass = 0.0f;
         	float totalMass = 0.0f;
         	
-    		for(int j = i + 1; j < bricks.size(); j++)
-    		{
-    			Brick currentBrick = bricks.get(j);
+    		for(int j = i + 1; j < bricks.size(); j++){
+    			currentBrick = bricks.get(j);
     			centerOfMass += currentBrick.getX() * currentBrick.getWeight();
     			totalMass += currentBrick.getWeight();
     		}
-    		centerOfMass = (centerOfMass / totalMass);
+    		
+    		if(i == bricks.size() - 1){
+    			centerOfMass = currentBottomBrick.getX();
+    		}
+    		else{
+    			centerOfMass = (centerOfMass / totalMass);
+    		}
+    		
     		float brickLeftXPos = currentBottomBrick.getX() - currentBottomBrick.getWidth() / 2.0f;
     		float brickRightXPos = currentBottomBrick.getX() + currentBottomBrick.getWidth() / 2.0f;
     		
@@ -253,9 +262,15 @@ public class Game {
     		
     		if(centerOfMass >= brickLeftXPos && centerOfMass <= brickRightXPos)
     		{
-    			highestStableBrick = i;
+    			// Commented this out because it doesn't calculate the highest stable brick properly.
+    			//if(highestStableBrick < i)
+    			//	highestStableBrick = i;
     		}
     		else{
+    			//highestStableBrick = GetHighestStableBrick();
+    			if(highestStableBrick < i)
+    				highestStableBrick = i;
+    			Log.i("Game", "Highest Stable Brick Index: " + highestStableBrick);
     			return false;
     		}
     	}

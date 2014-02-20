@@ -43,7 +43,7 @@ public class BrickView extends View {
 	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-		game.draw(canvas);
+		game.draw(canvas, this);
 	}
 
 	@Override
@@ -59,6 +59,7 @@ public class BrickView extends View {
 	
     public void placeBrick(){
     	game.place();
+    	this.invalidate();
     }
     
 	/**

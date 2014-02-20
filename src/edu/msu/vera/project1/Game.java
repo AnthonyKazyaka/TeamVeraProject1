@@ -1,6 +1,7 @@
 package edu.msu.vera.project1;
 
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 import edu.msu.vera.project1.Brick;
 import android.content.Context;
@@ -73,7 +74,39 @@ public class Game {
 	/*
 	 * Index of the highest brick that is stable
 	 */
-	private int highestStableBrick = 0;
+	private int highestStableBrick = -1;
+	private boolean isStable = true;
+	
+	private int unstableRotationDirection = 1;
+	private float unstableRotationAngle = 0.0f;
+	
+	private long timeOfUnstablePlacement = 0;
+	private double timeSinceUnstablePlacement = 0;
+	private boolean isDoneAnimatingFall = false;
+	
+	private class UnstableTimerTask extends TimerTask{
+		View view;
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			
+			timeSinceUnstablePlacement = (double)(System.currentTimeMillis() - timeSinceUnstablePlacement);
+			float seconds = (float)(timeSinceUnstablePlacement / 1000.0f);
+			
+			if(seconds <= 3 &&  unstableRotationAngle <= 90.0f){
+				unstableRotationAngle = seconds * 30.0f;
+			}
+			else if (seconds > 3){
+				unstableRotationAngle = 90.0f;
+			}
+			
+			view.invalidate();
+		}
+		
+		private void AddView(View view){
+			this.view = view;
+		}
+	}
 	
 	/**
 	 * The name of the bundle keys to save the stack
@@ -90,19 +123,41 @@ public class Game {
 
 	}
 	
-	public void draw(Canvas canvas) {
+	public void draw(Canvas canvas, View view) {
 		int wid = canvas.getWidth();
 		int hit = canvas.getHeight();
 		
 		cHeight = canvas.getHeight();
 		cWidth = canvas.getWidth();
 		
+		if(!isStable && !isDoneAnimatingFall && unstableRotationAngle < 90.0f){
+			timeSinceUnstablePlacement = System.currentTimeMillis() - timeOfUnstablePlacement;
+			unstableRotationAngle +=  timeSinceUnstablePlacement / 100.0f;
+			if(unstableRotationAngle > 90.0f){
+				unstableRotationAngle = 90.0f;
+				isDoneAnimatingFall = true;
+			}
+			view.postInvalidate();
+		}
+		
+		Log.i("Game", "Rotation Angle: " + unstableRotationAngle);
+		
 		//game area is entire canvas 
 		canvas.drawRect(0, 0, wid, hit, fillPaint);
-				
-		for(Brick brick : bricks) {
-			brick.draw(canvas);
+		
+		canvas.save();
+		
+		for(int i = 0; i < bricks.size(); i++)
+		{
+			bricks.get(i).draw(canvas);
+			if(i == highestStableBrick && highestStableBrick > 0){
+				float edgeOfBrickX = bricks.get(i).getX() + unstableRotationDirection * bricks.get(i).getWidth() / 2.0f;
+				float topEdgeOfBrickY = bricks.get(i).getY()  - bricks.get(i).getHeight() / 2.0f;
+				canvas.rotate(unstableRotationDirection * unstableRotationAngle, edgeOfBrickX, topEdgeOfBrickY);
+			}	
 		}
+		
+		canvas.restore();
 
 	}
 	
@@ -257,20 +312,16 @@ public class Game {
     		float brickLeftXPos = currentBottomBrick.getX() - currentBottomBrick.getWidth() / 2.0f;
     		float brickRightXPos = currentBottomBrick.getX() + currentBottomBrick.getWidth() / 2.0f;
     		
-    		//Log.i("Game", "Width: " + currentBottomBrick.getWidth());
-    		Log.i("Game", "Brick: " + i + "  Center of mass: " + centerOfMass + "   Total mass: " + totalMass + "  Left: " + brickLeftXPos + "  Right: " + brickRightXPos);
-    		
-    		if(centerOfMass >= brickLeftXPos && centerOfMass <= brickRightXPos)
-    		{
-    			// Commented this out because it doesn't calculate the highest stable brick properly.
-    			//if(highestStableBrick < i)
-    			//	highestStableBrick = i;
-    		}
+    		if(centerOfMass >= brickLeftXPos && centerOfMass <= brickRightXPos);
     		else{
+    			if(centerOfMass < brickLeftXPos)
+    			{
+    				unstableRotationDirection = -1;
+    			}
     			//highestStableBrick = GetHighestStableBrick();
-    			if(highestStableBrick < i)
-    				highestStableBrick = i;
-    			Log.i("Game", "Highest Stable Brick Index: " + highestStableBrick);
+    			highestStableBrick = i;
+				timeOfUnstablePlacement = System.currentTimeMillis();
+    			isStable = false;
     			return false;
     		}
     	}

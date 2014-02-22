@@ -84,29 +84,14 @@ public class Game {
 	private double timeSinceUnstablePlacement = 0;
 	private boolean isDoneAnimatingFall = false;
 	
-	private class UnstableTimerTask extends TimerTask{
-		View view;
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			
-			timeSinceUnstablePlacement = (double)(System.currentTimeMillis() - timeSinceUnstablePlacement);
-			float seconds = (float)(timeSinceUnstablePlacement / 1000.0f);
-			
-			if(seconds <= 3 &&  unstableRotationAngle <= 90.0f){
-				unstableRotationAngle = seconds * 30.0f;
-			}
-			else if (seconds > 3){
-				unstableRotationAngle = 90.0f;
-			}
-			
-			view.invalidate();
-		}
-		
-		private void AddView(View view){
-			this.view = view;
-		}
-	}
+	
+	public int turnB = 1;
+	//1 = player1
+	//2 = player2
+	
+	public int player1 = 0;
+	public int player2 = 0;
+	//if true, means 
 	
 	/**
 	 * The name of the bundle keys to save the stack
@@ -130,6 +115,7 @@ public class Game {
 		cHeight = canvas.getHeight();
 		cWidth = canvas.getWidth();
 		
+		Log.i("Game", "Highest stable brick: " + highestStableBrick);
 		if(!isStable && !isDoneAnimatingFall && unstableRotationAngle < 90.0f){
 			timeSinceUnstablePlacement = System.currentTimeMillis() - timeOfUnstablePlacement;
 			unstableRotationAngle +=  timeSinceUnstablePlacement / 100.0f;
@@ -140,7 +126,7 @@ public class Game {
 			view.postInvalidate();
 		}
 		
-		Log.i("Game", "Rotation Angle: " + unstableRotationAngle);
+		//Log.i("Game", "Rotation Angle: " + unstableRotationAngle);
 		
 		//game area is entire canvas 
 		canvas.drawRect(0, 0, wid, hit, fillPaint);
@@ -150,7 +136,7 @@ public class Game {
 		for(int i = 0; i < bricks.size(); i++)
 		{
 			bricks.get(i).draw(canvas);
-			if(i == highestStableBrick && highestStableBrick > 0){
+			if(i == highestStableBrick && highestStableBrick > -1){
 				float edgeOfBrickX = bricks.get(i).getX() + unstableRotationDirection * bricks.get(i).getWidth() / 2.0f;
 				float topEdgeOfBrickY = bricks.get(i).getY()  - bricks.get(i).getHeight() / 2.0f;
 				canvas.rotate(unstableRotationDirection * unstableRotationAngle, edgeOfBrickX, topEdgeOfBrickY);
@@ -253,6 +239,7 @@ public class Game {
     
     public void newTurn(Context context, float weight){
     	
+		Log.i("Game", "Now is player x's turn, x : " + turnB);
     	// when new turn is called is confirms where the base of bricks is located and adds the brick
     	// depending on the turn with the arguments of context, brick_color, x, y, and weight
     	// Also reset isPlaced to true so the brick can be dragged and placed. 
@@ -276,13 +263,31 @@ public class Game {
 
     	}
     	stackHeight += bricks.get(0).getHeight();
+		if (turnB == 1) {
+			turnB = 2;
+		}
+		else {
+			turnB = 1;
+		}
+		//if everything is fine, switch player
     }
     
-    public void place(){
+    public int place(){
     	isPlaced = false;
     	boolean isStable = isStackStable();    	
     	Log.i("Game", "IsStackStable: " + isStable);
+    	if (!isStable){
+    		return turnB;
+    		// if someone failed, return the winner 
+    	}
+    	else{
+    	   	Log.i("Game", "Turn ? : " + turnB);
+    		return 3;
+    		//no one failed
+
+    	}
     }
+    
     
     private boolean isStackStable(){
     	
@@ -375,9 +380,11 @@ public class Game {
         	stackHeight += bricks.get(0).getHeight();
 
 		}
-		
-		if ( bricks.get(bricks.size()-1).getId() == R.drawable.brick_barney){
-			turn = 1;
+		if (bricks.size() >= 1){
+			if ( bricks.get(bricks.size()-1).getId() == R.drawable.brick_barney){
+				turn = 1;
+			}
+			else turn = 0;
 		}
 		else {
 			turn = 0;

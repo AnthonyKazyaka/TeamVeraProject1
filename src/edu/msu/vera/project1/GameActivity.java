@@ -4,11 +4,13 @@ package edu.msu.vera.project1;
 import edu.msu.vera.project1.BrickView;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.view.Menu;
 import android.view.View;
 
+@SuppressWarnings("unused")
 public class GameActivity extends Activity {
 
 	/**
@@ -27,6 +29,7 @@ public class GameActivity extends Activity {
 			// We have saved state
 			brickView.loadInstanceState(bundle, this.getBaseContext());
 		}
+		brickView.startDia();
 
 	}
 

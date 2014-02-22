@@ -1,6 +1,7 @@
 package edu.msu.vera.project1;
 
 import edu.msu.vera.project1.Game;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -58,7 +59,35 @@ public class BrickView extends View {
     }
 	
     public void placeBrick(){
-    	game.place();
+    	int result = game.place();
+    	if (result != 3){
+    		if (result == 1) {
+                // Instantiate a dialog box builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                
+                // Parameterize the builder
+                builder.setTitle("Winner !");
+                builder.setMessage("Winner is player1 !!!");
+                //builder.setPositiveButton(android.R.string.ok, null);
+                
+                // Create the dialog box and show it
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+    		}
+    		else {
+                // Instantiate a dialog box builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                
+                // Parameterize the builder
+                builder.setTitle("Winner !");
+                builder.setMessage("Winner is player2 !!!");
+                //builder.setPositiveButton(android.R.string.ok, null);
+                
+                // Create the dialog box and show it
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+    		}
+    	}
     	this.invalidate();
     }
     
@@ -76,6 +105,20 @@ public class BrickView extends View {
 	 */
 	public void loadInstanceState(Bundle bundle, Context context) {
 		game.loadInstanceState(bundle, context);
+	}
+	
+	public void startDia(){
+        // Instantiate a dialog box builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        
+        // Parameterize the builder
+        builder.setTitle(R.string.hurrah);
+        builder.setMessage(R.string.completed_puzzle);
+        builder.setPositiveButton(android.R.string.ok, null);
+        
+        // Create the dialog box and show it
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
 	}
 	
 

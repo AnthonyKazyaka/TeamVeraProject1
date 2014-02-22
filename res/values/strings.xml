@@ -21,5 +21,8 @@
     <string name="winner">Congratulations! The winner is</string>
     <string name="player1score">"Player 1 score is: "</string>
     <string name="player2score">Player 2 score is:</string>
-
+    <string name="hurrah">Start</string>
+    <string name="completed_puzzle">Game start from player1 !</string>
+    <string name="congrat">Congratulations !!!</string>
+    
 </resources>

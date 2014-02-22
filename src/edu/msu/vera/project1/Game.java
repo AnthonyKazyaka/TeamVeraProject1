@@ -1,7 +1,6 @@
 package edu.msu.vera.project1;
 
 import java.util.ArrayList;
-import java.util.TimerTask;
 
 import edu.msu.vera.project1.Brick;
 import android.content.Context;

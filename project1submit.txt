@@ -1,37 +1,34 @@
 
 Project 1 Submission
 
-Group Name:   Vera
+Group Name:   Team Vera
 
 When you have completed the project, complete the following form and include it with your project. Include this file as a text file in the folder with your project when you turn it in. 
 
 Names of all classes responsible for storing the stack of bricks:
-
-Class : Game (Game.java) using an ArrayList called “bricks”. Bricks are added
-	in the same class in a function called ‘newTurn’
-
+BrickView
+Game
 
 
-Member 1: Justin Rush 
+Member 1: Justin Rush
 
-Responsibility: The brick view control - placing bricks and scrolling.
+Responsiblity: The brick view control (placing bricks and scrolling)
 
 
 
-Member 2: Anthony Kazyaka
+Member 2: Yanning Xue
 
-Responsibility: Brick stability testing and falling behavior.
+Responsiblity: Activities, help, and game sequencing
 
 
 
-Member 3: Yanning Xue
+Member 3: Anthony Kazyaka
 
-Responsibility: Activities, help, and game sequencing.
+Responsiblity: Brick stability testing and falling
 
 
 
 Member 4 (if applicable): 
 
 Responsiblity:
-
 
